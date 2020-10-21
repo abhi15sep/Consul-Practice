@@ -1,0 +1,26 @@
+Sample: https://demo.consul.io/ui/
+        http://localhost:8500/
+        
+
+vagrant init --minimal wesmcclure/ubuntu1404-docker
+vagrant up
+vagrant ssh consul-server
+vagrant box list
+vagrant destroy -f consul-server
+vagrant status
+
+Start agent in Server dev mode:
+consul agent -dev -bind 172.20.20.31
+Start agent in client mode:
+consul agent -config-file desky.consul.json
+
+HTTP API:
+https://www.consul.io/api/agent
+https://www.consul.io/api-docs/catalog
+http://localhost:8500/v1/catalog/nodes?pretty
+
+
+Interface DNS:
+On Agent(node)-> dig @localhost -p 8600 consul-server.node.consul
+On Agent(node) -> dig @localhost -p 8600 consul.service.consul
+On Agent(Servive port to connect) -> dig @localhost -p 8600 consul.service.consul SRV
