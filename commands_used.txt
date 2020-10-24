@@ -64,7 +64,61 @@ Services: ssh to web nodes
 >consul agent -advertise 172.20.20.21 -config-file common.json -config-file web.service.json &
 > killall -s 1 consul    (To reload config using SIGHUP)
 > sudo vi setup.web.sh
-> sudo +x setup.web.sh
+> sudo chmod +x setup.web.sh
 > ./setup.web.sh
-
 Try in browser:http://172.20.20.21:8080/ip.html
+> dig @localhost -p 8600 consul.service.consul SRV
+> dig @localhost -p 8600 web.service.consul SRV
+
+> vagrant ssh web2
+> killall consul
+> ps aux | grep consul
+> consul agent -advertise 172.20.20.22 -config-file common.json -config-file web.service.json &
+> killall -s 1 consul    (To reload config using SIGHUP)
+> sudo vi setup.web.sh
+> sudo chmod +x setup.web.sh
+> ./setup.web.sh
+Try in browser:http://172.20.20.22:8080/ip.html
+> dig @localhost -p 8600 web.service.consul SRV
+
+> vagrant ssh web3
+> killall consul
+> ps aux | grep consul
+> consul agent -advertise 172.20.20.23 -config-file common.json -config-file web.service.json &
+> killall -s 1 consul    (To reload config using SIGHUP)
+> sudo vi setup.web.sh
+> sudo chmod +x setup.web.sh
+> ./setup.web.sh
+Try in browser:http://172.20.20.23:8080/ip.html
+> dig @localhost -p 8600 web.service.consul SRV
+
+
+> curl http://localhost:8500/v1/catalog/service/web?pretty
+> curl http://localhost:8500/v1/health/service/web?pretty
+
+> vagrant ssh lb
+> killall consul
+> ps aux | grep consul
+> consul configtest -config-file lb.service.json
+> echo $?
+> consul agent -advertise 172.20.20.11 -config-file common.json -config-file lb.service.json &
+> killall -s 1 consul    (To reload config using SIGHUP)
+> sudo vi setup.web.sh
+> sudo chmod +x setup.web.sh
+> ./setup.web.sh
+Try in browser:http://172.20.20.23:8080/ip.html
+> dig @localhost -p 8600 web.service.consul SRV
+
+
+Maintenance Mode:
+> consul maint -enable -reason Because
+> consul maint
+> consul maint -disable
+> vagrant ssh web3
+> consul maint -enable
+> consul maint
+> dig @localhost -p 8600 web3.node.consul
+> dig @localhost -p 8600 web.service.consul
+> dig @localhost -p 8600 web.service.consul SRV
+> consul maint -disable
+> dig @localhost -p 8600 web.service.consul SRV
