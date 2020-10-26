@@ -122,3 +122,22 @@ Maintenance Mode:
 > dig @localhost -p 8600 web.service.consul SRV
 > consul maint -disable
 > dig @localhost -p 8600 web.service.consul SRV
+
+
+Dynamic Lb Config:
+> vagrant ssh lb
+> chmod +x /vagrant/provision/setup.lb.sh
+> /vagrant/provision/setup.lb.sh
+> dig @localhost -p 8600 lb.service.consul SRV
+> docker stop haproxy
+> docker start haproxy
+Try in browser:http://172.20.20.11/ip.html
+> chmod +x  /vagrant/provision/install.consul-template.sh
+> $_
+> consul-template -h
+> consul-template -template /vagrant/provision/haproxy.ctmpl  -dry
+> consul-template -config /vagrant/provision/lb.consul-template.hcl
+> Try in browser:http://172.20.20.11/haproxy
+> killall -HUP consul-template
+> consul maint -http-addr=172.20.20.23:8500 -enable
+> consul maint -http-addr=172.20.20.23:8500 -disable
