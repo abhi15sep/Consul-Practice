@@ -141,3 +141,15 @@ Try in browser:http://172.20.20.11/ip.html
 > killall -HUP consul-template
 > consul maint -http-addr=172.20.20.23:8500 -enable
 > consul maint -http-addr=172.20.20.23:8500 -disable
+
+KV:
+> curl http://localhost:8500/ui/dc1/kv/?recurse
+> curl -X PUT -d '50s' http://localhost:8500/v1/kv/prortal/haproxy/timeout-server?dc=dc1
+> curl -X DELETE http://localhost:8500/v1/kv/prod/portal/haproxy/timeout-server?dc=dc1
+> curl -X GET  http://localhost:8500/v1/kv/prod/portal/haproxy/timeout-server?dc=dc1?pretty
+> curl -X GET  http://localhost:8500/v1/kv/prod/portal/haproxy/timeout-server?dc=dc1'&'rawjq
+> curl http://localhost:8500/v1/kv/prod/portal/haproxy/stats?dc=dc1
+> curl -v http://localhost:8500/v1/kv/prod/portal/haproxy/stats?dc=dc1
+
+Blocking Queries:
+curl -v http://localhost:8500/v1/kv/prod/portal/haproxy/stats?dc=dc1'&'index=33274'&'wait=10s
